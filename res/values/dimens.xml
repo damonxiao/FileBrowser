@@ -3,5 +3,9 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    
+    <!-- file list  -->
+    <dimen name="file_list_item_margin">8dp</dimen>
+    <dimen name="file_list_item_name_txt_size">18sp</dimen>
 
 </resources>
