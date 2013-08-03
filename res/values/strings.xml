@@ -5,4 +5,13 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
 
+    <string-array name="goto_locations">
+        <item>Loading&#8230;</item>
+        <item>Home Folder</item>
+        <item>SD Card</item>
+        <item>Downloads</item>
+        <item>DCIM</item>
+        <item>Bookmarks&#8230;</item>
+        <item>Other&#8230;</item>
+    </string-array>
 </resources>
