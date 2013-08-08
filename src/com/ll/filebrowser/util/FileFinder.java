@@ -28,12 +28,17 @@ public class FileFinder extends AsyncTask<File, Void, List<File>> {
 
     @Override
     protected List<File> doInBackground(File... params) {
-        if (params == null || params.length == 0) {
+        if (params == null || params.length == 0 || params[0] == null ) {
             return null;
         }
         // TODO show dialog
         File dir = params[0];
-        return Arrays.asList(dir.listFiles());
+        synchronized (dir) {
+            if(dir != null && dir.exists() && dir.listFiles() != null){
+                return Arrays.asList(dir.listFiles());
+            }
+        }
+        return null;
     }
 
     @Override
