@@ -22,6 +22,10 @@ public final class R {
          */
         public static final int activity_horizontal_margin=0x7f040000;
         public static final int activity_vertical_margin=0x7f040001;
+        /**  file list  
+         */
+        public static final int file_list_item_margin=0x7f040002;
+        public static final int file_list_item_name_txt_size=0x7f040003;
     }
     public static final class drawable {
         public static final int filetype_apk=0x7f020000;
@@ -34,19 +38,47 @@ public final class R {
         public static final int filetype_sys_file=0x7f020007;
         public static final int filetype_video=0x7f020008;
         public static final int filetype_zip=0x7f020009;
-        public static final int ic_launcher=0x7f02000a;
-        public static final int list_actions=0x7f02000b;
-        public static final int list_actions_blu=0x7f02000c;
-        public static final int list_actions_glow=0x7f02000d;
+        public static final int ic_action_add=0x7f02000a;
+        public static final int ic_action_add_light=0x7f02000b;
+        public static final int ic_action_copy=0x7f02000c;
+        public static final int ic_action_copy_light=0x7f02000d;
+        public static final int ic_action_cut=0x7f02000e;
+        public static final int ic_action_cut_light=0x7f02000f;
+        public static final int ic_action_delete=0x7f020010;
+        public static final int ic_action_delete_light=0x7f020011;
+        public static final int ic_action_navigate=0x7f020012;
+        public static final int ic_action_navigate_light=0x7f020013;
+        public static final int ic_action_paste=0x7f020014;
+        public static final int ic_action_paste_light=0x7f020015;
+        public static final int ic_action_refresh=0x7f020016;
+        public static final int ic_action_refresh_light=0x7f020017;
+        public static final int ic_action_rename=0x7f020018;
+        public static final int ic_action_rename_light=0x7f020019;
+        public static final int ic_action_select=0x7f02001a;
+        public static final int ic_action_select_light=0x7f02001b;
+        public static final int ic_action_share=0x7f02001c;
+        public static final int ic_action_share_light=0x7f02001d;
+        public static final int ic_launcher=0x7f02001e;
+        public static final int list_actions=0x7f02001f;
+        public static final int list_actions_blu=0x7f020020;
+        public static final int list_actions_glow=0x7f020021;
     }
     public static final class id {
-        public static final int action_settings=0x7f090002;
+        public static final int action_goto_dir=0x7f090006;
+        public static final int action_new_folder=0x7f090007;
+        public static final int action_refresh=0x7f090008;
+        public static final int action_settings=0x7f090005;
+        public static final int file_desc=0x7f090003;
         public static final int file_list_view=0x7f090000;
-        public static final int section_label=0x7f090001;
+        public static final int file_name=0x7f090002;
+        public static final int file_type_icon=0x7f090001;
+        public static final int section_label=0x7f090004;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
-        public static final int fragment_main_dummy=0x7f030001;
+        public static final int edit_new_folder=0x7f030001;
+        public static final int file_list_item=0x7f030002;
+        public static final int fragment_main_dummy=0x7f030003;
     }
     public static final class menu {
         public static final int main=0x7f080000;
@@ -54,6 +86,14 @@ public final class R {
     public static final class string {
         public static final int action_settings=0x7f050001;
         public static final int app_name=0x7f050000;
+        public static final int cancel=0x7f050004;
+        /**  common string 
+         */
+        public static final int confirm=0x7f050003;
+        public static final int dialog_title_go_to_dir=0x7f050006;
+        /**  dialogs 
+         */
+        public static final int dialog_title_new_folder=0x7f050005;
         public static final int hello_world=0x7f050002;
     }
     public static final class style {

@@ -14,4 +14,13 @@
         <item>Bookmarks&#8230;</item>
         <item>Other&#8230;</item>
     </string-array>
+    
+    <!-- common string -->
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    
+    <!-- dialogs -->
+    <string name="dialog_title_new_folder">Create new folder</string>
+    <string name="dialog_title_go_to_dir">Go to</string>
 </resources>
+

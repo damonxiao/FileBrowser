@@ -2,7 +2,6 @@
 package com.ll.filebrowser.util;
 
 import android.net.Uri;
-import android.os.Handler;
 import android.webkit.MimeTypeMap;
 
 import java.io.File;
