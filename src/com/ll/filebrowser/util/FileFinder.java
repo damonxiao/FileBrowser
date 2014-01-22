@@ -4,7 +4,7 @@ package com.ll.filebrowser.util;
 import android.os.AsyncTask;
 
 import java.io.File;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FileFinder extends AsyncTask<File, Void, List<File>> {
@@ -33,9 +33,17 @@ public class FileFinder extends AsyncTask<File, Void, List<File>> {
         }
         // TODO show dialog
         File dir = params[0];
-        synchronized (dir) {
-            if(dir != null && dir.exists() && dir.listFiles() != null){
-                return Arrays.asList(dir.listFiles());
+        File[] subFiles = dir.listFiles();
+        if(dir != null && dir.exists() && subFiles != null){
+            synchronized (dir) {
+                List<File> result = new ArrayList<File>();
+                for (int i = 0; i < subFiles.length; i++) {
+                    File subFile = subFiles[i];
+                    if (subFile.exists()
+                            && (subFile.isDirectory() || subFile.isFile() || subFile.isHidden()))
+                        result.add(subFile);
+                }
+                return result;
             }
         }
         return null;

@@ -49,7 +49,7 @@ public class NavigatorAdapter extends BaseAdapter {
             convertView = mInflater.inflate(android.R.layout.simple_list_item_1, null);
         }
         TextView textView = (TextView) convertView.findViewById(android.R.id.text1);
-        textView.setText(mNavigatorDirs.get(position).getName());
+        textView.setText(mNavigatorDirs.get(position).getAbsolutePath());
         return convertView;
     }
 }

@@ -5,6 +5,8 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -18,6 +20,7 @@ import android.widget.ListView;
 import com.ll.filebrowser.R;
 import com.ll.filebrowser.util.FileFinder;
 import com.ll.filebrowser.util.FileListAdapter;
+import com.ll.filebrowser.util.FileUtil;
 import com.ll.filebrowser.util.Logger;
 import com.ll.filebrowser.util.NavigatorAdapter;
 
@@ -41,13 +44,15 @@ public class FileListActivity extends Activity implements
 	private File mCurFolder;
 
 	private FileFinder mExecutingFinder;
+	
+	private final File mRootFile = new File("/");
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		prepareActionBar();
-		mCurFolder = Environment.getRootDirectory();
+		mCurFolder = mRootFile;
 		mFileListView = (ListView) findViewById(R.id.file_list_view);
 		mFileListView.setOnItemClickListener(this);
 		loadFolder(mCurFolder);
@@ -61,9 +66,10 @@ public class FileListActivity extends Activity implements
 			mNavigatorDirs.set(0, folder);
 			mNavigatorAdapter.notifyDataSetChanged();
 		} else {
-			mNavigatorDirs.set(0, Environment.getRootDirectory());
+			mNavigatorDirs.set(0, mRootFile);
 			mNavigatorAdapter.notifyDataSetChanged();
 		}
+		getActionBar().setSelectedNavigationItem(0);
 		if (mExecutingFinder != null) {
 			mExecutingFinder.cancel(true);
 		}
@@ -111,7 +117,8 @@ public class FileListActivity extends Activity implements
 
 	private void prepareActionBar() {
 		mNavigatorDirs = new ArrayList<File>();
-		mNavigatorDirs.add(Environment.getRootDirectory());
+		mNavigatorDirs.add(new File(""));
+		mNavigatorDirs.add(mRootFile);
 		mNavigatorDirs.add(Environment.getExternalStorageDirectory());
 		mNavigatorDirs
 				.add(Environment
@@ -188,22 +195,44 @@ public class FileListActivity extends Activity implements
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
+	@Override
+    public void onBackPressed() {
+        if (!goToParent())
+            super.onBackPressed();
+    }
 
-	private void goToParent() {
+	private boolean goToParent() {
 		if (mCurFolder != null && mCurFolder.getParentFile() != null
 				&& mCurFolder.getParentFile().exists()) {
 			mCurFolder = mCurFolder.getParentFile();
 			loadFolder(mCurFolder);
+			return true;
 		}
+		return false;
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		File clickItem = mFileListAdapter.getItem(arg2);
+		Logger.d(TAG, "onItemClick()[select file type:"+FileUtil.getFileType(clickItem)+"]");
 		if (clickItem != null && clickItem.exists() && clickItem.isDirectory()) {
 			mCurFolder = clickItem;
 			loadFolder(mCurFolder);
+		} else if(clickItem != null && clickItem.exists() && clickItem.isFile()){
+		    viewFile(clickItem);
 		}
+	}
+	
+	private void viewFile(File file){
+	    Logger.d(TAG, "viewFile()[file="+file+"]");
+        Uri uri = Uri.fromFile(file);
+        String extension = android.webkit.MimeTypeMap.getFileExtensionFromUrl(uri.toString());
+        String mimeType = android.webkit.MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+        Logger.d(TAG, "viewFile()[extension="+extension+",mimeType="+mimeType+"]");
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(uri, mimeType != null ? mimeType : "*/*");
+        startActivity(Intent.createChooser(intent, "Open use"));
 	}
 
 }
