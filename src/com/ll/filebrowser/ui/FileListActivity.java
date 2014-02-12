@@ -110,13 +110,13 @@ public class FileListActivity extends Activity implements
 			@Override
 			public void onLoadSuccess(List<File> files) {
 				dismissProgressDialog();
-//				if (mFileListAdapter == null) {
+				if (mFileListAdapter == null) {
 					mFileListAdapter = new FileListAdapter(
 							FileListActivity.this, files);
 					mFileListView.setAdapter(mFileListAdapter);
-//				} else {
-//					mFileListAdapter.refreshData(files);
-//				}
+				} else {
+					mFileListAdapter.refreshData(files);
+				}
 			}
 
 			@Override

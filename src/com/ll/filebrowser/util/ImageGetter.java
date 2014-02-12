@@ -7,7 +7,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.widget.ImageView;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -30,27 +29,32 @@ public class ImageGetter {
     private static Queue<ImageGetterTask> sTaskQueue = new LinkedList<ImageGetter.ImageGetterTask>();
 
     private static TaskState sTaskState = TaskState.RESUME;
-
+    
     private static enum TaskState {
         PAUSE, RESUME
+    }
+    
+    public interface IImageGetterCallback{
+        void onLoadSuccess(Drawable drawable, int reqPosition);
+        void onLoadFailed();
     }
 
     private static class ImageHeader {
         String url;
-        String md5;
-        ImageView imageView;
-        boolean set2bg;
+        int position;
         int maxWidth;
         int maxHeight;
+        IImageGetterCallback callback;
+        String md5;
 
-        public ImageHeader(String url, ImageView imageView, boolean set2bg, int maxWidth,
-                int maxHeight) {
+        public ImageHeader(String url,int position, int maxWidth,
+                int maxHeight,IImageGetterCallback callback) {
             super();
             this.url = url;
-            this.imageView = imageView;
-            this.set2bg = set2bg;
+            this.position = position;
             this.maxWidth = maxWidth;
             this.maxHeight = maxHeight;
+            this.callback = callback;
             md5 = MD5Util.getFileMD5String(new File(url));
         }
     }
@@ -76,10 +80,13 @@ public class ImageGetter {
 
         @Override
         protected void onPostExecute(Void result) {
-            bindImage2View(header.imageView, header.set2bg, header.url);
+            if (header.callback != null && IMAGE_CACHE.get(header.url) != null) {
+                header.callback.onLoadSuccess(IMAGE_CACHE.get(header.url), header.position);
+            }
             doQueueNext();
         }
 
+        @SuppressWarnings("deprecation")
         private void loadLocalImage() {
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
@@ -108,6 +115,7 @@ public class ImageGetter {
             return cacheFile.exists();
         }
 
+        @SuppressWarnings("deprecation")
         private void loadLocalCacheImage() {
             Bitmap bmp = BitmapFactory.decodeFile(LOCAL_CACHE_DIR + File.separator + header.md5);
             IMAGE_CACHE.put(header.url, new BitmapDrawable(bmp));
@@ -145,29 +153,18 @@ public class ImageGetter {
             }
         }
     }
-
-    public static void loadImage(String url, ImageView imageView, boolean set2bg) {
-        if (null == url || null == imageView) {
+    
+    public static void loadImage(String url, int position, int maxWidth, int maxHeight,
+            IImageGetterCallback callback) {
+        if (null == url) {
             return;
         }
-        if (bindImage2View(imageView, set2bg, url)) {
+        if (IMAGE_CACHE.get(url) != null && callback != null) {
+            callback.onLoadSuccess(IMAGE_CACHE.get(url), position);
             return;
         }
-        queueToExecute(new ImageGetterTask(new ImageHeader(url, imageView, set2bg,
-                imageView.getWidth(),
-                imageView.getHeight())));
-    }
-
-    public static void loadThumbnails(String url, ImageView imageView, boolean set2bg,
-            int maxWidth, int maxHeight) {
-        if (null == url || null == imageView) {
-            return;
-        }
-        if (bindImage2View(imageView, set2bg, url)) {
-            return;
-        }
-        queueToExecute(new ImageGetterTask(new ImageHeader(url, imageView, set2bg, maxWidth,
-                maxHeight)));
+        ImageHeader imageHeader = new ImageHeader(url, position, maxWidth, maxHeight, callback);
+        queueToExecute(new ImageGetterTask(imageHeader));
     }
 
     public static void pauseLoadImage() {
@@ -191,19 +188,6 @@ public class ImageGetter {
         if (!sTaskQueue.isEmpty() && sTaskState != TaskState.PAUSE) {
             sTaskQueue.poll().execute();
         }
-    }
-
-    private static boolean bindImage2View(ImageView imageView, boolean set2bg, String url) {
-        Drawable drawable = IMAGE_CACHE.get(url);
-        if (drawable != null) {
-            if (set2bg) {
-                imageView.setBackground(drawable);
-            } else {
-                imageView.setImageDrawable(drawable);
-            }
-            return true;
-        }
-        return false;
     }
 
 }
