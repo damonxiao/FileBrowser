@@ -1,12 +1,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="@dimen/file_list_item_height"
     android:layout_margin="@dimen/activity_horizontal_margin">
     <ImageView
         android:id="@+id/file_type_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" 
+        android:layout_marginLeft="@dimen/file_list_item_image_margin_left"
+        android:layout_width="@dimen/file_list_item_image_width"
+        android:layout_height="@dimen/file_list_item_height" 
+        android:layout_centerVertical="true"
         android:src="@drawable/filetype_dir"/>
     <TextView
         android:id="@+id/file_name"

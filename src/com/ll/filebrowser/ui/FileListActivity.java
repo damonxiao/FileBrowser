@@ -13,11 +13,15 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -33,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileListActivity extends Activity implements
-		ActionBar.OnNavigationListener, OnItemClickListener {
+		ActionBar.OnNavigationListener, OnItemClickListener ,OnItemLongClickListener{
 
 	private static final String TAG = "FileListActivity";
 
@@ -53,6 +57,7 @@ public class FileListActivity extends Activity implements
 
 	private static final int DIALOG_NEW_FOLDER = 1;
 	private static final int DIALOG_GOTO_DIR = 2;
+	private static final int DIALOG_OPTION_FILE = 3;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +67,27 @@ public class FileListActivity extends Activity implements
 		mCurFolder = mRootFile;
 		mFileListView = (ListView) findViewById(R.id.file_list_view);
 		mFileListView.setOnItemClickListener(this);
+		mFileListView.setOnItemLongClickListener(this);
 		loadFolder(mCurFolder);
+		mFileListView.setOnScrollListener(new OnScrollListener() {
+		    @Override
+		    public void onScrollStateChanged(AbsListView view, int scrollState) {
+		        Log.d(TAG, "onScrollStateChanged()[scrollState="+scrollState+"]");
+		        if(null == mFileListAdapter){
+		            return;
+		        }
+                if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
+                    mFileListAdapter.resumeLoadImage();
+                } else {
+		            mFileListAdapter.pauseLoadImage();
+		        }
+		    }
+		    
+		    @Override
+		    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
+		            int totalItemCount) {
+		    }
+		});
 	}
 
 	private void loadFolder(File folder) {
@@ -85,13 +110,13 @@ public class FileListActivity extends Activity implements
 			@Override
 			public void onLoadSuccess(List<File> files) {
 				dismissProgressDialog();
-				if (mFileListAdapter == null) {
+//				if (mFileListAdapter == null) {
 					mFileListAdapter = new FileListAdapter(
 							FileListActivity.this, files);
 					mFileListView.setAdapter(mFileListAdapter);
-				} else {
-					mFileListAdapter.refreshData(files);
-				}
+//				} else {
+//					mFileListAdapter.refreshData(files);
+//				}
 			}
 
 			@Override
@@ -327,9 +352,24 @@ public class FileListActivity extends Activity implements
                 builder.setNegativeButton(R.string.cancel, null);
                 return builder.create();
             }
+            case DIALOG_OPTION_FILE: {
+                
+            }
             default:
                 break;
         }
 	    return super.onCreateDialog(id);
 	}
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        if(parent == mFileListView){
+//            if(FileUtil.deleteFile(mFileListAdapter.getItem(position))){
+//                loadFolder(mCurFolder);
+//            }
+            return true;
+        }
+        return false;
+    }
+    
 }

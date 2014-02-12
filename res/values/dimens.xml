@@ -5,6 +5,9 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     
     <!-- file list  -->
+    <dimen name="file_list_item_height">45dp</dimen>
+    <dimen name="file_list_item_image_margin_left">8dp</dimen>
+    <dimen name="file_list_item_image_width">45dp</dimen>
     <dimen name="file_list_item_margin">8dp</dimen>
     <dimen name="file_list_item_name_txt_size">18sp</dimen>
 

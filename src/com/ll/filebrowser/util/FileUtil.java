@@ -84,4 +84,7 @@ public class FileUtil {
         return !file.canRead() && !file.canWrite();
     }
 
+    public static boolean deleteFile(File file){
+        return file != null && file.delete();
+    }
 }

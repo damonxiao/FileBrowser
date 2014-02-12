@@ -94,7 +94,19 @@ public class FileListAdapter extends BaseAdapter {
                 break;
         }
     	fileTypeIcon.setImageResource(typeIconId);
+        if (fileType == FileUtil.FileType.IMAGE) {
+            ImageGetter.loadThumbnails(file.getAbsolutePath(), fileTypeIcon, false,
+                    fileTypeIcon.getWidth(), fileTypeIcon.getHeight());
+        }
         return convertView;
+    }
+    
+    public void pauseLoadImage(){
+        ImageGetter.pauseLoadImage();
+    }
+    
+    public void resumeLoadImage(){
+        ImageGetter.resumeLoadImage();
     }
 
 }
